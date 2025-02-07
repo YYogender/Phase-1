@@ -1,0 +1,6 @@
+document.getelemetnbyID
+document.createElement -->creates div , button etc 
+document.appendChild --> if we have branches , then we can append those branches to the final div
+element.setAttribut --> if some particular element/div have some attributes we have set by this , ex button -> onlclick mark as done
+element.children --> if we have to upadte the value to particular children of parent div , then element.children[1] 
+1-> means first children similarly element.children[2] etc
