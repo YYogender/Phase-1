@@ -1,0 +1,18 @@
+<script>
+    function add()
+    {
+        const a=document.getElementById("firstnumber").value;
+        const b=document.getElementById("secondnumber").value;
+        const ans=parseInt(a)+parseInt(b);
+        const finaldiv=document.getElementById("container");
+        finaldiv.innerHTML=ans;
+
+    }
+</script>
+
+<body>
+    <input placeholder="fist number" type="text" id="firstnumber"></input>
+    <input placeholder="second number" type="text" id="secondnumber"></input>
+    <button onclick="add()"> add number</button>
+    <div id="container"></div>
+</body>
