@@ -1,0 +1,59 @@
+<script>
+
+    function mark(id)
+    {
+        const update=document.getElementById(id);
+        update.children[2].innerHTML="Done !";
+    }
+
+    function deletetodo(id)
+    {
+        const deleltechild=document.getElementById(id);
+        deleltechild.remove();
+    }
+
+    function child(title,id)
+    {
+        const outerdiv=document.createElement("div");
+        outerdiv.setAttribute("id",id);
+
+        const iddiv=document.createElement("div");
+        iddiv.innerHTML=id+'.';
+
+        const titlediv=document.createElement("div");
+        titlediv.innerHTML=title;
+
+        const donediv=document.createElement("button");
+        donediv.innerHTML="Mark as Done !";
+        donediv.setAttribute("onclick",`mark(${id})`);
+
+        const deletediv=document.createElement("button");
+        deletediv.innerHTML="Delete";
+        deletediv.setAttribute("onclick",`deletetodo(${id})`);
+
+        outerdiv.style.display='flex';
+        outerdiv.style.alignItems='center';
+        outerdiv.style.marginBottom='5px';
+        iddiv.style.marginRight='5px';
+        titlediv.style.marginRight='10px';
+        donediv.style.marginRight='10px';
+
+        outerdiv.append(iddiv,titlediv,donediv,deletediv);
+        return outerdiv;
+    }
+    let id=1;
+    function addtodo()
+    {
+        const title=document.getElementById("title").value;
+        const finalfdiv=document.getElementById("container");
+        finalfdiv.appendChild(child(title,id++));
+    }
+</script>
+
+<html>
+    <body>
+        <input type="=text" placeholder="add todo" id="title"></input></br></br>
+        <button onclick="addtodo()">Add to do</button></br></br>
+        <div id="container"></div></br></br>
+    </body>
+</html>
