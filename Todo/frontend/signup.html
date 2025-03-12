@@ -1,0 +1,38 @@
+<head>
+    <title>Signup</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+</head>
+
+<script>
+    async function signup()
+    {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try
+        {
+            const response = await axios.post('http://localhost:3000/signup',{
+                name:name,
+                email:email,
+                password:password
+            });
+
+            window.location.href='login.html';
+        }
+        catch(err)
+        {
+            console.log(err.response.data.msg);
+            alert(err.response.data.msg);
+        }
+    }
+</script>
+
+<body>
+    <div style="display: flex;flex-direction: column; align-items: center;">
+        <input type="text" placeholder="name" id="name" style="margin-bottom: 10px;"><br>
+        <input type="email" placeholder="email" id="email" style="margin-bottom: 10px;"><br>
+        <input type="password" placeholder="password" id="password" style="margin-bottom: 10px;"><br>
+        <button onclick="signup()">Signup</button>
+    </div>
+</body>

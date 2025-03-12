@@ -1,0 +1,158 @@
+<head>
+    <title>Todo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+</head>
+
+<body>
+    <div style="display: flex; flex-direction:column; align-items: center;">
+        <input type="text" placeholder="title" id="title" style="margin-right: 10px;">
+        <button id="add"> ADD</button>
+        <div id="container"></div>
+    </div>
+
+    <script>
+    let index = 1;
+        
+     document.addEventListener('DOMContentLoaded',()=>{
+            const token = localStorage.getItem('token');
+            if(!token)
+        {
+            console.log('token is missing');
+            window.location.href='login.html';
+            return ;
+        }
+
+        
+        const inputtitle = document.getElementById('title');
+        const addbtn = document.getElementById('add');
+        const finaldiv = document.getElementById('container');
+        fetchtodo();
+
+        async function fetchtodo()
+        {
+            try
+            {
+                const response = await axios.get('http://localhost:3000/fetchtodo',{
+                    headers:{Authorization:token}
+                });
+
+                finaldiv.innerHTML="";
+                response.data.todo.forEach((todo,index)=>{
+                    finaldiv.appendChild(createchild(todo,index+1));
+                });
+            }
+            catch(err)
+            {
+                console.error("Error fetching todos:", err.response ? err.response.data : err);
+                alert('Failed to fetch todos');
+            }
+        }
+
+        function createchild(todo,index)
+        {
+            const outerdiv = document.createElement("div");
+            outerdiv.setAttribute('id',todo._id);
+
+            const iddiv = document.createElement("div");
+            iddiv.innerHTML=index +'.';
+
+            const titlediv = document.createElement("div");
+            titlediv.innerHTML=todo.title;
+
+            const donebtn = document.createElement("button");
+            donebtn.innerHTML=todo.done ? "done":"mark as done"; //.....
+            donebtn.addEventListener('click',()=>mark(todo._id,donebtn));//.......
+
+            const deletebtn = document.createElement("button");
+            deletebtn.innerHTML='Delete';
+            deletebtn.addEventListener('click',()=>deletetodo(todo._id));//........
+
+            //.........
+            outerdiv.style.display = 'flex';
+            outerdiv.style.alignItems = 'center';
+            outerdiv.style.marginBottom = '5px';
+
+            iddiv.style.marginRight = '5px';
+            titlediv.style.marginRight = '10px';
+            donebtn.style.marginRight = '10px';
+
+            outerdiv.append(iddiv,titlediv,donebtn,deletebtn);
+            return outerdiv;
+        }
+
+        async function deletetodo(index)
+        {
+            //.........
+            try
+            {
+                const response = await axios.delete(`http://localhost:3000/deletetodo/${index}`,{
+                    headers:{Authorization:token}
+                });
+
+                const item = document.getElementById(index);
+                if(item)
+                {
+                    item.remove();
+                }
+            }
+            catch(err)
+            {
+                console.error("Error deleting todo:", err);
+                alert("Failed to delete todo.");
+            }
+        }
+
+        async function mark(index,button)
+        {
+            //................
+            try
+            {
+                const response = await axios.put(`http://localhost:3000/markdone/${index}`,{},{
+                    headers:{Authorization:token}
+                });
+                //why we send empty {} 
+                //Since this PUT request does not require any additional data
+                //in the request body, we pass an empty object ({}) as a placeholder. 
+                //Without it, Axios would treat the third argument (headers) as the body, which is incorrect.
+
+                button.innerHTML="Done";
+                //button.disabled=true;
+            }
+            catch(err)
+            {
+                console.error("Error marking todo as done:", err);
+                alert("Failed to mark todo as done.");
+            }
+        }
+
+
+        // ADD 
+
+        addbtn.addEventListener('click',async()=>{
+            const title = inputtitle.value.trim();
+            if(!title)
+        {
+            alert('title is required');
+            return ;
+        }
+
+        try
+        {
+            const response = await axios.post('http://localhost:3000/addtodo',
+            {title:title},
+            {headers:{Authorization:token}}
+            );
+
+            inputtitle.value="";
+            fetchtodo();
+        }
+        catch(err)
+        {
+            //..........
+            console.error("Error adding todo:", err);
+            alert("Failed to add todo.");
+        }
+        });
+    });
+    </script>
+</body>
