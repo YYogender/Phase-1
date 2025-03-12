@@ -1,0 +1,6 @@
+express 
+jwt
+in memory Db 
+cors
+fetch
+axios
